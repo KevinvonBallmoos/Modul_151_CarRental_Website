@@ -4,7 +4,7 @@ from .models import Cars, Brand, Location, Customer, Rent
 
 class CarSerializer(serializers.ModelSerializer):
     brand_pks = serializers.PrimaryKeyRelatedField(queryset=Brand.objects.all(), source='brand', write_only=True,
-                                                   label='Cars')
+                                                   label='Brand')
     image = serializers.ImageField(allow_null=True)
 
     def __init__(self, *args, **kwargs):
@@ -46,7 +46,7 @@ class RentSerializer(serializers.ModelSerializer):
                                                      write_only=True,
                                                      label='Customer')
     car_pk = serializers.PrimaryKeyRelatedField(queryset=Cars.objects.all(), source='car', write_only=True,
-                                                label='Car')
+                                                many=True, label='Car')
 
     class Meta:
         model = Rent

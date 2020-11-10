@@ -67,7 +67,7 @@ class Customer(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return '{}{}'.format(self.first_name, self.last_name)
+        return '{} {}'.format(self.first_name, self.last_name)
 
 
 class Rent(models.Model):
@@ -82,7 +82,7 @@ class Rent(models.Model):
     is_picked_up = models.BooleanField(null=False, default=False)
     is_returned = models.BooleanField(null=True)
     customer = models.ForeignKey(Customer, on_delete=models.RESTRICT)
-    car = models.ManyToManyField(Cars)
+    car = models.ManyToManyField(Cars, related_name='car_list', blank=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

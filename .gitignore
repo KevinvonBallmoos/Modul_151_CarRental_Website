@@ -2,3 +2,4 @@ venv/*
 .idea/*
 .env
 media/*
+!../m151_car_rental/media/cars/noimage.png
