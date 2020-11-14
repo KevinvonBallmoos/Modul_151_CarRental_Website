@@ -1,7 +1,9 @@
 from django.shortcuts import render
 from rest_framework import viewsets, permissions
-from .serializers import CarSerializer, BrandSerializer, LocationSerializer, CustomerSerializer, RentSerializer
+from .serializers import CarSerializer, BrandSerializer, LocationSerializer, CustomerSerializer, RentSerializer, UserSerializer
 from .models import Cars, Brand, Location, Customer, Rent
+from .permissions import IsAuthenticatedOrPostOnly
+from django.contrib.auth.models import User
 
 
 class CarViewSet(viewsets.ModelViewSet):
@@ -37,3 +39,10 @@ class RentViewSet(viewsets.ModelViewSet):
 
     queryset = Rent.objects.all().order_by('begin')
     serializer_class = RentSerializer
+
+
+class UserViewSet(viewsets.ModelViewSet):
+    permission_classes = [IsAuthenticatedOrPostOnly]
+
+    queryset = User.objects.all().order_by('username')
+    serializer_class = UserSerializer

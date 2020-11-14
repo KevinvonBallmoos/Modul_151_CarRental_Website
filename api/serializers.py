@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from .models import Cars, Brand, Location, Customer, Rent
+from django.contrib.auth.models import User
 
 
 class CarSerializer(serializers.ModelSerializer):
@@ -53,6 +54,17 @@ class RentSerializer(serializers.ModelSerializer):
         fields = '__all__'
         depth = 1
 
+        def validate_car_pk(self, cars):
+            if len(cars) == 0:
+                raise serializers.ValidationError('No cars selected. Please select some books to rent.')
+            old_list = [] if not self.instance else self.instance.cars.all()
+            for car in cars:
+                if car not in old_list and car.is_rent:
+                    raise serializers.ValidationError(
+                        'The Car "{}" with the ID "{}" is already rent.'.format(cars.title, cars.id)
+                    )
+            return cars
+
 
 class CustomerSerializer(serializers.ModelSerializer):
     location_pk = serializers.PrimaryKeyRelatedField(queryset=Location.objects.all(), source='location',
@@ -64,3 +76,11 @@ class CustomerSerializer(serializers.ModelSerializer):
         model = Customer
         fields = '__all__'
         depth = 1
+
+
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ('id', 'username', 'email', 'password', 'first_name', 'last_name')
+        extra_kwargs = {'password': {'write_only': True}, 'id': {'read_only': True}, 'email': {'required': True},
+                        'first_name': {'required': True}, 'last_name': {'required': True}}

@@ -1,4 +1,6 @@
 from django.db import models
+from django.db.models.signals import m2m_changed
+from django.dispatch import receiver
 
 
 class Brand(models.Model):
@@ -91,3 +93,16 @@ class Rent(models.Model):
             car.is_rent = False
             car.save()
         super(Rent, self).delete()
+
+
+def m2m_change_handler_for_rent_cars_through(sender, instance, action, **kwargs):
+    if action == 'pre_remove' or action == 'pre_add':
+        change_borrow_of_car_list(instance.cars.all(), False)
+    elif action == 'post_remove' or action == 'post_add':
+        change_borrow_of_car_list(instance.cars.all(), True)
+
+
+def change_borrow_of_car_list(car_list: list, is_borrowed: bool):
+    for car in car_list:
+        car.is_borrowed = is_borrowed
+        car.save()
