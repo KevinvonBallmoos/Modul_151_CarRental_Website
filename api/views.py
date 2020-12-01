@@ -1,12 +1,16 @@
 from django.shortcuts import render
 from rest_framework import viewsets, permissions
-from .serializers import CarSerializer, BrandSerializer, LocationSerializer, CustomerSerializer, RentSerializer, UserSerializer
+from .serializers import CarSerializer, BrandSerializer, LocationSerializer, CustomerSerializer, RentSerializer, \
+    UserSerializer
 from .models import Cars, Brand, Location, Customer, Rent
 from .permissions import IsAuthenticatedOrPostOnly
 from django.contrib.auth.models import User
 
 
 class CarViewSet(viewsets.ModelViewSet):
+    """
+    Instantiates and returns the list of permissions that this view requires
+    """
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
     queryset = Cars.objects.all().order_by('model')
@@ -14,6 +18,10 @@ class CarViewSet(viewsets.ModelViewSet):
 
 
 class BrandViewSet(viewsets.ModelViewSet):
+    """
+    Instantiates and returns the list of permissions that this view requires
+    """
+
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
     queryset = Brand.objects.all().order_by('brand')
@@ -21,6 +29,9 @@ class BrandViewSet(viewsets.ModelViewSet):
 
 
 class LocationViewSet(viewsets.ModelViewSet):
+    """
+    Instantiates and returns the list of permissions that this view requires
+    """
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
     queryset = Location.objects.all().order_by('location')
@@ -28,6 +39,9 @@ class LocationViewSet(viewsets.ModelViewSet):
 
 
 class CustomerViewSet(viewsets.ModelViewSet):
+    """
+    Instantiates and returns the list of permissions that this view requires
+    """
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
     queryset = Customer.objects.all().order_by('first_name')
@@ -35,6 +49,9 @@ class CustomerViewSet(viewsets.ModelViewSet):
 
 
 class RentViewSet(viewsets.ModelViewSet):
+    """
+    Instantiates and returns the list of permissions that this view requires
+    """
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
     queryset = Rent.objects.all().order_by('begin')
@@ -42,6 +59,9 @@ class RentViewSet(viewsets.ModelViewSet):
 
 
 class UserViewSet(viewsets.ModelViewSet):
+    """
+    Instantiates and returns the list of permissions that this view requires
+    """
     permission_classes = [IsAuthenticatedOrPostOnly]
 
     queryset = User.objects.all().order_by('username')
