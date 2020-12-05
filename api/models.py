@@ -25,6 +25,7 @@ class Cars(models.Model):
     details = models.CharField(null=False, max_length=255)
     address = models.CharField(null=False, max_length=255)
     image = models.ImageField(null=False, upload_to='cars', default='noimage.png')
+    is_rent = models.BooleanField(null=False, default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -63,7 +64,7 @@ class Customer(models.Model):
     last_name = models.CharField(null=False, max_length=30)
     email = models.EmailField(null=False, max_length=50)
     street = models.CharField(null=False, max_length=25)
-    phone_number = models.IntegerField(null=False)
+    phone_number = models.CharField(null=False, max_length=25)
     location = models.ForeignKey(Location, null=False, on_delete=models.RESTRICT)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
