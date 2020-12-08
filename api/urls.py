@@ -4,6 +4,9 @@ from . import views as api_views
 from rest_framework.authtoken.views import obtain_auth_token
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView, SpectacularRedocView
 
+"""
+Declare a router and registering links to all models
+"""
 routers = routers.DefaultRouter()
 routers.register(r'cars', api_views.CarViewSet)
 routers.register(r'brand', api_views.BrandViewSet)
@@ -12,7 +15,9 @@ routers.register(r'customer', api_views.CustomerViewSet)
 routers.register(r'rent', api_views.RentViewSet)
 routers.register(r'user', api_views.UserViewSet)
 
-
+"""
+urlpatterns includes the schema links, as auth-token
+"""
 urlpatterns = [
     path('', include(routers.urls)),
     path('api-auth-token/', obtain_auth_token),
