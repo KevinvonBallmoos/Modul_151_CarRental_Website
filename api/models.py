@@ -1,6 +1,4 @@
 from django.db import models
-from django.db.models.signals import m2m_changed
-from django.dispatch import receiver
 
 
 class Brand(models.Model):
@@ -33,6 +31,11 @@ class Cars(models.Model):
         return '{} {}'.format(self.model, self.brand, )
 
     def save(self, *args, **kwargs):
+        """
+        When no image is set when creating a car, then a default image is set
+        :param args: additional parameter
+        :param kwargs: additional parameter
+        """
         if not self.image:
             if self.id:
                 self.image = Cars.objects.get(pk=self.id).image
@@ -90,6 +93,12 @@ class Rent(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def delete(self, using=None, keep_parents=False):
+        """
+        When deleting a rent the is_rent attribute in the cars model gets the value false
+        :param using:
+        :param keep_parents:
+        :return:
+        """
         for car in self.car.all():
             car.is_rent = False
             car.save()
@@ -97,6 +106,10 @@ class Rent(models.Model):
 
 
 def m2m_change_handler_for_rent_cars_through(sender, instance, action, **kwargs):
+    """
+    when a rent is created it adds it to the car_list
+    :return: the rent in the car_list
+    """
     if action == 'pre_remove' or action == 'pre_add':
         change_borrow_of_car_list(instance.cars.all(), False)
     elif action == 'post_remove' or action == 'post_add':
@@ -104,6 +117,12 @@ def m2m_change_handler_for_rent_cars_through(sender, instance, action, **kwargs)
 
 
 def change_borrow_of_car_list(car_list: list, is_borrowed: bool):
+    """
+    when a rent gets in the car_list then the is_borrowed in rent gets the value true
+    :param car_list:
+    :param is_borrowed:
+    :return:
+    """
     for car in car_list:
         car.is_borrowed = is_borrowed
         car.save()

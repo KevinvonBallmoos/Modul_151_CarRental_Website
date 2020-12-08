@@ -14,6 +14,11 @@ class CarSerializer(serializers.ModelSerializer):
     image = serializers.ImageField(allow_null=True)
 
     def __init__(self, *args, **kwargs):
+        """
+        Overrides default constructor
+        :param args: additionol parameter
+        :param kwargs: additionol parameter
+        """
         # Get additional parameters from constructor
         depth = kwargs.pop('depth', None)
         fields = kwargs.pop('fields', None)
@@ -70,8 +75,14 @@ class RentSerializer(serializers.ModelSerializer):
         depth = 1
 
     def validate_car_pk(self, cars):
+        """
+        When no car_pks is selected the user gets a Error
+        And when an car_pks is selected, its just valid if its not already in the car_list
+        :param cars: cars
+        :return: cars
+        """
         if len(cars) == 0:
-            raise serializers.ValidationError('No cars selected. Please select some books to rent.')
+            raise serializers.ValidationError('No cars selected. Please select some cars to rent.')
         old_list = [] if not self.instance else self.instance.cars.all()
         for car in cars:
             if car not in old_list and car.is_rent:
@@ -108,6 +119,10 @@ class UserSerializer(serializers.ModelSerializer):
                         'first_name': {'required': True}, 'last_name': {'required': True}}
 
     def create(self, validated_data):
+        """
+        Checks if a email is already registered when creating a user
+        :return: user
+        """
         password = validated_data.pop('password', None)
         try:
             if User.objects.filter(email=validated_data.get('email')).exists():
@@ -121,6 +136,12 @@ class UserSerializer(serializers.ModelSerializer):
         return user
 
     def update(self, instance, validated_data):
+        """
+        Checks if a email is already registered when updating a user
+        :return: super update method
+        """
         if User.objects.filter(email=validated_data.get('email')).exists():
+            if User.objects.exists():
+
             raise serializers.ValidationError('Email already registered.')
         return super(UserSerializer, self).update(instance, validated_data)
